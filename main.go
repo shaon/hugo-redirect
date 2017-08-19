@@ -25,6 +25,12 @@ type rssItem struct {
 	Meta        []postMeta `xml:"postmeta"`
 	Status      string     `xml:"status"`
 	PubDate     string     `xml:"pubDate"`
+	Category    []category `xml:"category"`
+}
+
+type category struct {
+	Domain   string `xml:"domain,attr"`
+	Nicename string `xml:"nicename,attr"`
 }
 
 type postMeta struct {
@@ -33,9 +39,11 @@ type postMeta struct {
 }
 
 type wpBlogPost struct {
-	Title       string `yaml:"title"`
-	RedirectURL string `yaml:"redirectURL"`
-	PublishedOn string `yaml:"date"`
+	Title       string   `yaml:"title"`
+	RedirectURL string   `yaml:"redirectURL"`
+	PublishedOn string   `yaml:"date"`
+	Tags        []string `yaml:"tags"`
+	Category    []string `yaml:"categories"`
 }
 
 func check(e error) {
@@ -74,12 +82,24 @@ func main() {
 				defer f.Close()
 			}
 
+			var tagList []string
+			var categoryList []string
+
+			for _, cat := range item.Category {
+				if cat.Domain == "post_tag" {
+					tagList = append(tagList, cat.Nicename)
+				}
+				if cat.Domain == "category" {
+					categoryList = append(categoryList, cat.Nicename)
+				}
+			}
+
 			t, _ := time.Parse("Mon, 2 Jan 2006 15:04:05 +0000", item.PubDate)
 			pubdate := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d-00:00",
 				t.Year(), t.Month(), t.Day(),
 				t.Hour(), t.Minute(), t.Second())
 
-			post := wpBlogPost{item.Title, item.Link, pubdate}
+			post := wpBlogPost{item.Title, item.Link, pubdate, tagList, categoryList}
 
 			ypost, err := yaml.Marshal(post)
 			hyphen := []byte("---\n")
