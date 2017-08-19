@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	yaml "gopkg.in/yaml.v2"
@@ -31,6 +32,7 @@ type rssItem struct {
 type category struct {
 	Domain   string `xml:"domain,attr"`
 	Nicename string `xml:"nicename,attr"`
+	Value    string `xml:",chardata"`
 }
 
 type postMeta struct {
@@ -87,11 +89,16 @@ func main() {
 
 			for _, cat := range item.Category {
 				if cat.Domain == "post_tag" {
-					tagList = append(tagList, cat.Nicename)
+					if isUnique(categoryList, cat.Value) {
+						tagList = append(tagList, cat.Value)
+					}
 				}
 				if cat.Domain == "category" {
-					categoryList = append(categoryList, cat.Nicename)
+					if isUnique(categoryList, cat.Value) {
+						categoryList = append(categoryList, cat.Value)
+					}
 				}
+
 			}
 
 			t, _ := time.Parse("Mon, 2 Jan 2006 15:04:05 +0000", item.PubDate)
@@ -108,6 +115,15 @@ func main() {
 			check(err)
 		}
 	}
+}
+
+func isUnique(l []string, key string) bool {
+	for _, v := range l {
+		if strings.ToUpper(v) == strings.ToUpper(key) {
+			return false
+		}
+	}
+	return true
 }
 
 func isPublished(status string) bool {
