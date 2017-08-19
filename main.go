@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/xml"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -55,7 +56,12 @@ func check(e error) {
 }
 
 func main() {
-	xmlFile, err := os.Open(os.Args[1])
+
+	var archiveLocation = flag.String("l", "archives", "location of archives")
+	var file = flag.String("f", "mywp.xml", "xml file")
+	flag.Parse()
+
+	xmlFile, err := os.Open(*file)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -70,14 +76,14 @@ func main() {
 	}
 	xml.Unmarshal(byteValue, &rssfeed)
 
-	if err := os.Mkdir("archive", 0777); err != nil {
+	if err := os.Mkdir(*archiveLocation, 0777); err != nil {
 		fmt.Printf("Error creating archive directory. %v", err)
 	}
 
 	for _, item := range rssfeed.Items {
 		if isPost(item.PostType) &&
 			isPublished(item.Status) && !isReBlog(item.Meta) {
-			wppost := "archive/" + item.PostName + ".md"
+			wppost := *archiveLocation + "/" + item.PostName + ".md"
 			if _, err := os.Stat(wppost); os.IsNotExist(err) {
 				f, err := os.Create(wppost)
 				check(err)
@@ -98,7 +104,6 @@ func main() {
 						categoryList = append(categoryList, cat.Value)
 					}
 				}
-
 			}
 
 			t, _ := time.Parse("Mon, 2 Jan 2006 15:04:05 +0000", item.PubDate)
