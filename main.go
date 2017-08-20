@@ -56,7 +56,6 @@ func check(e error) {
 }
 
 func main() {
-
 	var archiveLocation = flag.String("l", "archives", "location of archives")
 	var file = flag.String("f", "mywp.xml", "xml file")
 	flag.Parse()
