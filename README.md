@@ -3,7 +3,7 @@ Hugo Redirect
 
 If you have been blogging on wordpress and decided to switch to Hugo but don't really want to move all your wordpress stuffs to Hugo just yet (or never) but looking for a way to have links on your Hugo website to forward to your wordpress blog, this may come in handy.
 
-![Imgur](http://i.imgur.com/b88Hajv.gif)
+![gifs.com](https://j.gifs.com/Anw5XO.gif)
 
 # Usage
 
