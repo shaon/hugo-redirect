@@ -7,7 +7,7 @@ If you have been blogging on wordpress and decided to switch to Hugo but don't r
 
 # Usage
 
-#### Pre-requisite
+### Pre-requisite
 Add the following line to the `single.html` file,
 ```
 {{ if .Params.redirectURL }}<meta http-equiv="refresh" content="1; url={{ .Params.redirectURL }}"/>{{ end }}
@@ -41,7 +41,7 @@ categories:
 ---
 ```
 
-## Note
+#### Note
 In wordpress Tags and Categories are case-sensetive and sometimes looks like duplicates when moving to other static blogs like Nikola or Hugo. While creating pages for redirect, it doesn't add the duplicates.
 
 
