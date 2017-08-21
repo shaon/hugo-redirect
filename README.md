@@ -42,9 +42,8 @@ categories:
 ```
 
 ## Note
-```
 In wordpress Tags and Categories are case-sensetive and sometimes looks like duplicates when moving to other static blogs like Nikola or Hugo. While creating pages for redirect, it doesn't add the duplicates.
-```
+
 
 3. `redirectURL` parameter creates the following `<meta>` when Hugo generates the HTML file.
 4. You need to add the following line to your theme's single.html* file.
